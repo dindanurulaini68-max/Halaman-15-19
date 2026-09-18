@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensiklopedia Sisingaan Halaman 15-19</title>
+  
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sceneEl = document.querySelector('a-scene');
+
+      // 1. Ambil target entity masing-masing halaman
+      const target0 = document.querySelector('#target0');
+      const target1 = document.querySelector('#target1');
+      const target2 = document.querySelector('#target2');
+      const target3 = document.querySelector('#target3');
+      const target4 = document.querySelector('#target4');
+  
+      // 2. Ambil audio & video masing-masing halaman
+      const audio15 = document.querySelector('#audio_halaman15');
+      const audio16 = document.querySelector('#audio_lengser');
+      const audio17 = document.querySelector('#audio_halaman17');
+      const audio18 = document.querySelector('#audio_halaman18');
+      const audio19 = document.querySelector('#audio_halaman19');
+
+      // Unmute & Unlock Audio/Video secara otomatis pada sentuhan/klik pertama di layar
+      const unlockMediaOnFirstTouch = () => {
+        // Unlock Audio
+        [audio15, audio16, audio17, audio18, audio19].forEach(audio => {
+          if (audio) {
+            audio.play().then(() => {
+              audio.pause();
+              audio.currentTime = 0;
+            }).catch(() => {});
+          }
+        });
+
+        // Unlock Video 
+        [].forEach(video => {
+          if (video) {
+            video.muted = false;
+            video.play().then(() => {
+              video.pause();
+              video.currentTime = 0;
+            }).catch(() => {});
+          }
+        });
+
+        window.removeEventListener('touchstart', unlockMediaOnFirstTouch);
+        window.removeEventListener('click', unlockMediaOnFirstTouch);
+      };
+
+      window.addEventListener('touchstart', unlockMediaOnFirstTouch, { once: true });
+      window.addEventListener('click', unlockMediaOnFirstTouch, { once: true });
+
+      // Helper Listener Audio
+      function setupAudioTarget(targetEl, audioEl) {
+        if (!targetEl || !audioEl) return;
+
+        targetEl.addEventListener("targetFound", () => {
+          audioEl.play().catch(e => console.log("Autoplay audio terhalang: ", e));
+        });
+
+        targetEl.addEventListener("targetLost", () => {
+          audioEl.pause();
+          audioEl.currentTime = 0;
+        });
+      }
+
+      // Helper Listener Video
+      function setupVideoTarget(targetEl, videoEl) {
+        if (!targetEl || !videoEl) return;
+
+        targetEl.addEventListener("targetFound", () => {
+          videoEl.play().catch(e => {
+            console.log("Autoplay video terhalang, mencoba memutar tanpa suara...", e);
+            videoEl.muted = true; // Fallback jika browser tetap memblokir audio video
+            videoEl.play();
+          });
+        });
+
+        targetEl.addEventListener("targetLost", () => {
+          videoEl.pause();
+          videoEl.currentTime = 0;
+        });
+      }
+
+      // Pasang Listener Audio
+      setupAudioTarget(target0, audio15);
+      setupAudioTarget(target1, audio16);
+      setupAudioTarget(target2, audio17);
+      setupAudioTarget(target3, audio18);
+      setupAudioTarget(target4, audio19);
+    
+      // Pasang Listener Video
+
+    });
+  </script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+<a-scene 
+    gltf-model="dracoDecoderPath: https://www.gstatic.com/draco/v1/decoders/;"
+    mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.0001; filterBeta: 0.001; missTolerance: 12;" 
+    vr-mode-ui="enabled: false" 
+    device-orientation-permission-ui="enabled: false">
+
+  <a-assets>
+    <!-- Target 0: Halaman 15 -->
+    <a-asset-item id="ogohModel15" src="./halaman 15/ogoh-ogoh.glb"></a-asset-item>
+    <audio id="audio_halaman15" src="./halaman 15/halaman15 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 1: Halaman 16 -->
+    <a-asset-item id="aki_jalanModel16" src="./halaman 16/aki_jalan.glb.glb"></a-asset-item>
+    <a-asset-item id="nini_jalanModel16" src="./halaman 16/nini_jalan.glb.glb"></a-asset-item>
+    <audio id="audio_lengser" src="./halaman 16/lengser.mp3" preload="auto"></audio>
+
+
+    <!-- Target 2: Halaman 17 -->
+    <a-asset-item id="peragabusana1Model17" src="./halaman 17/peraga busana 1.glb"></a-asset-item>
+    <a-asset-item id="peragabusana2Model17" src="./halaman 17/peraga busana 2.glb"></a-asset-item>
+    <a-asset-item id="peragabusana3Model17" src="./halaman 17/peraga busana 3.glb"></a-asset-item>
+    <a-asset-item id="peragabusana4Model17" src="./halaman 17/peraga busana 4.glb"></a-asset-item>
+    <audio id="audio_halaman17" src="./halaman 17/halaman17 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 3: Halaman 18 -->
+    <a-asset-item id="penunggangModel18" src="./halaman 18/penunggang singa.glb"></a-asset-item>
+    <audio id="audio_halaman18" src="./halaman 18/halaman18 audio.mp3" preload="auto"></audio>
+
+    <!-- Target 4: Halaman 19 -->
+    <a-asset-item id="aaModel" src="./halaman 19/aa nyengir.glb"></a-asset-item>
+    <a-asset-item id="patungModel19" src="./halaman 19/patung_singa.glb"></a-asset-item>
+    <audio id="audio_halaman19" src="./halaman 19/halaman19 audio.mp3" preload="auto"></audio>
+
+
+  </a-assets>
+
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <!-- TARGET 0 (Halaman 15) -->
+  <a-entity id="target0" mindar-image-target="targetIndex: 0">
+    <a-gltf-model src="#ogohModel15" position="0 0 0" scale="0.4 0.4 0.4" rotation="0 0 0" animation-mixer animation="property: rotation; to: 0 360 0; dur: 6000; easing: linear; loop: true"></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 1 (Halaman 16) -->
+  <a-entity id="target1" mindar-image-target="targetIndex: 1">
+    <a-gltf-model src="#aki_jalanModel16" position="-0.1 0 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer animation></a-gltf-model>
+    <a-gltf-model src="#nini_jalanModel16" position="0.2 0 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer animation></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 2 (Halaman 17) -->
+  <a-entity id="target2" mindar-image-target="targetIndex: 2">
+    <a-gltf-model src="#peragabusana1Model17" position="-0.6 0 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer animation></a-gltf-model>
+    <a-gltf-model src="#peragabusana2Model17" position="-0.2 0 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#peragabusana3Model17" position="0.2 0 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#peragabusana4Model17" position="0.45 -0.2 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 3 (Halaman 18) -->
+  <a-entity id="target3" mindar-image-target="targetIndex: 3">
+    <a-gltf-model src="#penunggangModel18" position="0 0 0" scale="0.5 0.5 0.5" rotation="90 0 0" animation-mixer animation></a-gltf-model>
+  </a-entity>
+
+  <!-- TARGET 4 (Halaman 19) -->
+  <a-entity id="target4" mindar-image-target="targetIndex: 4">
+    <a-gltf-model src="#aaModel" position="0.1 0 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+    <a-gltf-model src="#patungModel19" position="-0.2 0 0" scale="0.4 0.4 0.4" rotation="90 0 0" animation-mixer></a-gltf-model>
+  </a-entity>
+
+</a-scene>
+
+</body>
+</html>
